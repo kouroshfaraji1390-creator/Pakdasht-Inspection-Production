@@ -1,1 +1,17 @@
-{"name":"pakdasht-inspection-final","version":"1.0.0","private":true}
+{
+  "name": "pakdasht-inspection-final",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "start": "node api/server.mjs",
+    "dev": "NODE_ENV=development node --watch api/server.mjs",
+    "backup": "node scripts/backup-sqlite.mjs",
+    "migrate:postgres": "node scripts/migrate-sqlite-to-postgres.mjs"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
