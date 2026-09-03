@@ -21,18 +21,22 @@ jobs:
           set -euo pipefail
           ZIP="Pakdasht-Inspection-PRODUCTION-GITHUB-ROOT-REGISTRATION.zip"
           test -f "$ZIP"
+          rm -rf /tmp/pakdasht-import
+          mkdir -p /tmp/pakdasht-import
+          unzip -q "$ZIP" -d /tmp/pakdasht-import
+          test "$(find /tmp/pakdasht-import -type f | wc -l)" -eq 40
+          test -f /tmp/pakdasht-import/api/config.mjs
+          test -f /tmp/pakdasht-import/api/server.mjs
+          test -f /tmp/pakdasht-import/api/data/pakdasht.sqlite
+          test -f /tmp/pakdasht-import/dist/icons/icon-192.png
+          test -f /tmp/pakdasht-import/dist/icons/icon-512.png
+          test -f /tmp/pakdasht-import/web/icons/icon-192.png
+          test -f /tmp/pakdasht-import/web/icons/icon-512.png
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          unzip -q "$ZIP"
+          cp -a /tmp/pakdasht-import/. .
           rm -f "$ZIP"
-          test "$(find . -type f | wc -l)" -eq 40
-          test -f api/config.mjs
-          test -f api/server.mjs
-          test -f api/data/pakdasht.sqlite
-          test -f dist/icons/icon-192.png
-          test -f dist/icons/icon-512.png
-          test -f web/icons/icon-192.png
-          test -f web/icons/icon-512.png
           rm -rf .github
+          test "$(find . -type f | wc -l)" -eq 40
 
       - name: Commit imported baseline
         shell: bash
@@ -41,5 +45,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
+          git add -f api/data/pakdasht.sqlite
           git commit -m "Import verified production baseline from ZIP"
           git push origin HEAD:main
