@@ -1,0 +1,10 @@
+import { cp, rm, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+const root=resolve('.');
+const dist=join(root,'dist');
+await rm(dist,{recursive:true,force:true}); await mkdir(dist,{recursive:true});
+await cp(join(root,'web'),dist,{recursive:true});
+const index=await readFile(join(dist,'index.html'),'utf8');
+if(!index.includes('سامانه بازرسی پاکدشت')) throw new Error('Build validation failed: index missing');
+await writeFile(join(dist,'BUILD.txt'),`Built ${new Date().toISOString()}\nNode ${process.version}\n`);
+console.log('Build OK:',dist);
