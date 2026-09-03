@@ -36,7 +36,15 @@ jobs:
           cp -a /tmp/pakdasht-import/. .
           rm -f "$ZIP"
           rm -rf .github
-          test "$(find . -type f | wc -l)" -eq 40
+          echo "Imported file count: $(find . -type f | wc -l)"
+          find . -type f -print | sort
+          test -f api/config.mjs
+          test -f api/server.mjs
+          test -f api/data/pakdasht.sqlite
+          test -f dist/icons/icon-192.png
+          test -f dist/icons/icon-512.png
+          test -f web/icons/icon-192.png
+          test -f web/icons/icon-512.png
 
       - name: Commit imported baseline
         shell: bash
