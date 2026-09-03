@@ -1,0 +1,45 @@
+name: Import verified production baseline
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: github.event.head_commit.message != 'Import verified production baseline from ZIP'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Import exact ZIP at repository root
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="Pakdasht-Inspection-PRODUCTION-GITHUB-ROOT-REGISTRATION.zip"
+          test -f "$ZIP"
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          unzip -q "$ZIP"
+          rm -f "$ZIP"
+          test "$(find . -type f | wc -l)" -eq 40
+          test -f api/config.mjs
+          test -f api/server.mjs
+          test -f api/data/pakdasht.sqlite
+          test -f dist/icons/icon-192.png
+          test -f dist/icons/icon-512.png
+          test -f web/icons/icon-192.png
+          test -f web/icons/icon-512.png
+          rm -rf .github
+
+      - name: Commit imported baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Import verified production baseline from ZIP"
+          git push origin HEAD:main
