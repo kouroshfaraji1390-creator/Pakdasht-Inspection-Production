@@ -1,7 +1,7 @@
 {
   "name": "pakdasht-inspection-final",
-  "version": "1.0.0",
   "private": true,
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
