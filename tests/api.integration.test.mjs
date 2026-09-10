@@ -19,10 +19,11 @@ async function request(path, options={}) {
   return {r,d};
 }
 async function register({username, role='INSPECTOR', organizationName='سازمان آزمون X'}) {
+  const position=role==='MANAGER'?'UNION_PRESIDENT':'UNION_INSPECTOR';
   return request('/api/auth/register',{method:'POST',body:JSON.stringify({
     firstName:role==='MANAGER'?'مدیر':'بازرس', lastName:username, personnelCode:username,
     mobile:'09120000000', username, password:'Integration-Password-2026!', organizationName,
-    role, inviteCode:role==='MANAGER'?'PAKDASHT-DEMO-MGR':''
+    role, position, presidentCode:position==='UNION_PRESIDENT'?'aaa123':''
   })});
 }
 async function login(username) {
