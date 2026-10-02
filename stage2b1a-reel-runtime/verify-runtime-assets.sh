@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$PWD/stage2b1a-reel-runtime"
+ROOT="${RUNNER_TEMP:-/tmp}/stage2b1a-reel-runtime"
 NPMDIR="$ROOT/npm"
 ASSETS="$ROOT/assets"
 EVID="$ROOT/evidence"
@@ -180,3 +180,5 @@ PY
 python -m pip freeze > "$EVID/pip-freeze.txt"
 sha256sum "$NPMDIR/package-lock.json" > "$EVID/package-lock.sha256"
 echo "STAGE2B1A_RUNTIME_ASSET_VERIFY_PASS" | tee "$EVID/final-status.txt"
+rm -rf "$PWD/stage2b1a-evidence"
+cp -a "$EVID" "$PWD/stage2b1a-evidence"
