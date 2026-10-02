@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+copy_evidence() {
+  if [ -d "${EVID:-}" ]; then
+    rm -rf "$PWD/stage2b1a-evidence"
+    cp -a "$EVID" "$PWD/stage2b1a-evidence"
+  fi
+}
+trap copy_evidence EXIT
+
 ROOT="${RUNNER_TEMP:-/tmp}/stage2b1a-reel-runtime"
 NPMDIR="$ROOT/npm"
 ASSETS="$ROOT/assets"
@@ -123,7 +131,7 @@ report={
 # Florence exact application-compatible loader
 fp=os.environ['FLORENCE2_MODEL_PATH']
 processor=AutoProcessor.from_pretrained(fp,trust_remote_code=True,local_files_only=True)
-model=AutoModelForCausalLM.from_pretrained(fp,trust_remote_code=True,local_files_only=True).eval()
+model=AutoModelForCausalLM.from_pretrained(fp,trust_remote_code=True,local_files_only=True,attn_implementation='eager').eval()
 report['checks']['florence']={
   'status':'PASS','model':'microsoft/Florence-2-base','path':fp,
   'processor_class':processor.__class__.__name__,'model_class':model.__class__.__name__,
